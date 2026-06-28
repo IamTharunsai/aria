@@ -178,14 +178,74 @@ model Billing {
   createdAt        DateTime @default(now())
 }
 
-enum Plan          { STARTER PRO AGENCY }
-enum Role          { OWNER ADMIN MEMBER }
-enum AgentMode     { OFF ASSIST AUTOPILOT }
-enum Direction     { INBOUND OUTBOUND }
-enum CallStatus    { IN_PROGRESS COMPLETED MISSED FAILED VOICEMAIL }
-enum Sentiment     { POSITIVE NEUTRAL NEGATIVE }
-enum Channel       { SMS WHATSAPP FACEBOOK INSTAGRAM LIVE_CHAT }
-enum ConvStatus    { OPEN CLOSED PENDING }
-enum KBType        { FAQ DOCUMENT WEBPAGE CUSTOM }
-enum CampaignType  { VOICE SMS MIXED }
-enum CampaignStatus{ DRAFT SCHEDULED RUNNING COMPLETED PAUSED }
+enum Plan {
+  STARTER
+  PRO
+  AGENCY
+}
+
+enum Role {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum AgentMode {
+  OFF
+  ASSIST
+  AUTOPILOT
+}
+
+enum Direction {
+  INBOUND
+  OUTBOUND
+}
+
+enum CallStatus {
+  IN_PROGRESS
+  COMPLETED
+  MISSED
+  FAILED
+  VOICEMAIL
+}
+
+enum Sentiment {
+  POSITIVE
+  NEUTRAL
+  NEGATIVE
+}
+
+enum Channel {
+  SMS
+  WHATSAPP
+  FACEBOOK
+  INSTAGRAM
+  LIVE_CHAT
+}
+
+enum ConvStatus {
+  OPEN
+  CLOSED
+  PENDING
+}
+
+enum KBType {
+  FAQ
+  DOCUMENT
+  WEBPAGE
+  CUSTOM
+}
+
+enum CampaignType {
+  VOICE
+  SMS
+  MIXED
+}
+
+enum CampaignStatus {
+  DRAFT
+  SCHEDULED
+  RUNNING
+  COMPLETED
+  PAUSED
+}
