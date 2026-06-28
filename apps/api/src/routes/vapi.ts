@@ -110,7 +110,6 @@ router.post("/", async (req, res) => {
               ? summary + handoffNote
               : handoffNote || null,
           sentiment,
-          ...(isSpam ? { metadata: { spamFlag: true } } : {}),
           ...(detectedLanguage ? { language: detectedLanguage } : {}),
           ...(needsHandoff ? { humanHandoff: true } : {}),
         },

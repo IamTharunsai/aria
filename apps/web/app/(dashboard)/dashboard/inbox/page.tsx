@@ -6,7 +6,7 @@ import { formatDistanceToNow } from "date-fns"
 import { MessageSquare, Phone, Send, Loader2, X } from "lucide-react"
 
 const CHANNEL_COLORS: Record<string, { bg: string; color: string; label: string }> = {
-  SMS:       { bg: "rgba(20,71,230,0.08)",  color: "#1447E6", label: "SMS"       },
+  SMS:       { bg: "rgba(99,102,241,0.08)",  color: "#6366F1", label: "SMS"       },
   WHATSAPP:  { bg: "rgba(22,163,74,0.08)",  color: "#16A34A", label: "WhatsApp"  },
   FACEBOOK:  { bg: "rgba(59,130,246,0.08)", color: "#3B82F6", label: "Facebook"  },
   INSTAGRAM: { bg: "rgba(236,72,153,0.08)", color: "#EC4899", label: "Instagram" },

@@ -20,7 +20,7 @@ function StatCard({ label, value, sub, accent }: { label: string; value: string 
   )
 }
 
-const SENT_COLORS: Record<string, string> = { POSITIVE: "#16A34A", NEUTRAL: "#1447E6", NEGATIVE: "#EF4444" }
+const SENT_COLORS: Record<string, string> = { POSITIVE: "#10B981", NEUTRAL: "#6366F1", NEGATIVE: "#F43F5E" }
 
 function ChartTip({ active, payload, label }: { active?: boolean; payload?: Array<{color:string;name:string;value:number}>; label?: string }) {
   if (!active || !payload?.length) return null

@@ -22,7 +22,7 @@ type CallRow = {
 
 const STATUS_STYLES: Record<string, { label: string; color: string; bg: string }> = {
   IN_PROGRESS: { label: "Live",      color: "#16A34A", bg: "rgba(22,163,74,0.1)"    },
-  COMPLETED:   { label: "Done",      color: "#1447E6", bg: "rgba(20,71,230,0.08)"   },
+  COMPLETED:   { label: "Done",      color: "#6366F1", bg: "rgba(99,102,241,0.08)"  },
   MISSED:      { label: "Missed",    color: "#EF4444", bg: "rgba(239,68,68,0.08)"   },
   FAILED:      { label: "Failed",    color: "#6B7280", bg: "rgba(107,114,128,0.08)" },
   VOICEMAIL:   { label: "Voicemail", color: "#7C3AED", bg: "rgba(124,58,237,0.08)"  },
@@ -34,7 +34,7 @@ const columns = [
   col.accessor("direction", {
     header: "",
     cell: (info) => info.getValue() === "INBOUND"
-      ? <PhoneIncoming size={14} style={{ color: "#1447E6" }} />
+      ? <PhoneIncoming size={14} style={{ color: "#6366F1" }} />
       : <PhoneOutgoing size={14} style={{ color: "#6B7280" }} />,
   }),
   col.accessor("contact", {
