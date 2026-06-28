@@ -1,0 +1,191 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Organization {
+  id           String   @id @default(cuid())
+  name         String
+  slug         String   @unique
+  plan         Plan     @default(STARTER)
+  logoUrl      String?
+  customDomain String?
+  brandColor   String?
+  isAgency     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  locations    Location[]
+  members      Member[]
+  contacts     Contact[]
+  conversations Conversation[]
+  campaigns    Campaign[]
+  billing      Billing?
+}
+
+model Location {
+  id             String       @id @default(cuid())
+  orgId          String
+  org            Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  name           String
+  phoneNumber    String?
+  vapiAgentId    String?
+  timezone       String       @default("America/New_York")
+  hoursJson      Json?
+  address        String?
+  website        String?
+  languages      String[]     @default(["en"])
+  systemPrompt   String?      @db.Text
+  agentName      String       @default("ARIA")
+  agentVoiceId   String?
+  agentMode      AgentMode    @default(AUTOPILOT)
+  greetingMsg    String?      @db.Text
+  afterHoursMsg  String?      @db.Text
+  humanPhone     String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  calls          Call[]
+  knowledgeItems KnowledgeItem[]
+  contacts       Contact[]
+}
+
+model Member {
+  id        String   @id @default(cuid())
+  orgId     String
+  org       Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  clerkId   String   @unique
+  email     String
+  name      String
+  role      Role     @default(MEMBER)
+  createdAt DateTime @default(now())
+}
+
+model Contact {
+  id            String       @id @default(cuid())
+  orgId         String
+  org           Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  locationId    String?
+  location      Location?    @relation(fields: [locationId], references: [id])
+  phone         String
+  name          String?
+  email         String?
+  language      String?
+  tags          String[]
+  memoryJson    Json?
+  totalCalls    Int          @default(0)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  calls         Call[]
+  conversations Conversation[]
+  @@unique([orgId, phone])
+}
+
+model Call {
+  id                String     @id @default(cuid())
+  locationId        String
+  location          Location   @relation(fields: [locationId], references: [id])
+  contactId         String?
+  contact           Contact?   @relation(fields: [contactId], references: [id])
+  vapiCallId        String?    @unique
+  direction         Direction  @default(INBOUND)
+  status            CallStatus @default(IN_PROGRESS)
+  fromNumber        String
+  toNumber          String
+  startedAt         DateTime   @default(now())
+  endedAt           DateTime?
+  durationSeconds   Int?
+  recordingUrl      String?
+  transcript        String?    @db.Text
+  summary           String?    @db.Text
+  sentiment         Sentiment?
+  language          String?
+  humanHandoff      Boolean    @default(false)
+  appointmentBooked Boolean    @default(false)
+  appointmentData   Json?
+  leadCaptured      Boolean    @default(false)
+  leadData          Json?
+  createdAt         DateTime   @default(now())
+}
+
+model Conversation {
+  id           String       @id @default(cuid())
+  orgId        String
+  org          Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  contactId    String?
+  contact      Contact?     @relation(fields: [contactId], references: [id])
+  channel      Channel
+  externalId   String?
+  status       ConvStatus   @default(OPEN)
+  assignedTo   String?
+  isAiHandling Boolean      @default(true)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  messages     Message[]
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  direction      Direction
+  content        String       @db.Text
+  mediaUrls      String[]
+  isAi           Boolean      @default(false)
+  externalId     String?
+  sentAt         DateTime     @default(now())
+}
+
+model KnowledgeItem {
+  id          String    @id @default(cuid())
+  locationId  String
+  location    Location  @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  type        KBType
+  title       String
+  content     String    @db.Text
+  sourceUrl   String?
+  createdAt   DateTime  @default(now())
+}
+
+model Campaign {
+  id          String         @id @default(cuid())
+  orgId       String
+  org         Organization   @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  name        String
+  type        CampaignType
+  status      CampaignStatus @default(DRAFT)
+  script      String?        @db.Text
+  targets     Json
+  scheduledAt DateTime?
+  completedAt DateTime?
+  stats       Json?
+  createdAt   DateTime       @default(now())
+}
+
+model Billing {
+  id               String   @id @default(cuid())
+  orgId            String   @unique
+  org              Organization @relation(fields: [orgId], references: [id])
+  stripeCustomerId String?
+  stripeSubId      String?
+  plan             Plan     @default(STARTER)
+  minutesUsed      Int      @default(0)
+  minutesLimit     Int      @default(500)
+  renewsAt         DateTime?
+  createdAt        DateTime @default(now())
+}
+
+enum Plan          { STARTER PRO AGENCY }
+enum Role          { OWNER ADMIN MEMBER }
+enum AgentMode     { OFF ASSIST AUTOPILOT }
+enum Direction     { INBOUND OUTBOUND }
+enum CallStatus    { IN_PROGRESS COMPLETED MISSED FAILED VOICEMAIL }
+enum Sentiment     { POSITIVE NEUTRAL NEGATIVE }
+enum Channel       { SMS WHATSAPP FACEBOOK INSTAGRAM LIVE_CHAT }
+enum ConvStatus    { OPEN CLOSED PENDING }
+enum KBType        { FAQ DOCUMENT WEBPAGE CUSTOM }
+enum CampaignType  { VOICE SMS MIXED }
+enum CampaignStatus{ DRAFT SCHEDULED RUNNING COMPLETED PAUSED }
