@@ -1,6 +1,9 @@
-node_modules
+**/node_modules
 .env
-.env.local
-.next
-dist
+**/.env.local
+**/.next
+**/dist
 .turbo
+**/.turbo
+**/pnpm-debug.log*
+
