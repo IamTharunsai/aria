@@ -5,13 +5,13 @@ export default function SignInPage() {
   return (
     <div
       className="min-h-screen flex flex-col items-center justify-center px-4"
-      style={{ background: "#060E1E" }}
+      style={{ background: "#07070F" }}
     >
       {/* ARIA brand header above the Clerk component */}
       <div className="mb-6 flex flex-col items-center gap-3">
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center"
-          style={{ background: "linear-gradient(135deg, #1447E6 0%, #0EA5E9 100%)" }}
+          style={{ background: "linear-gradient(135deg, #6366F1 0%, #22D3EE 100%)", boxShadow: "0 8px 32px rgba(99,102,241,0.4)" }}
         >
           <Zap size={22} className="text-white" fill="white" />
         </div>

@@ -101,6 +101,7 @@ export default function AgentPage() {
   const setHours     = api.agent.setHours.useMutation()
   const saveHumanPhoneMut = api.agent.setHumanPhone.useMutation()
   const setSafety = api.agent.setSafety.useMutation()
+  const { data: promptPreview } = api.agent.previewPrompt.useQuery(locationId)
 
   // ── Barge-in state ────────────────────────────────────────────────────────
   const { data: safetyData } = api.agent.getSafety.useQuery(locationId)
@@ -399,6 +400,51 @@ export default function AgentPage() {
                 </button>
               </div>
             </div>
+
+            {promptPreview && (
+              <details className="rounded-2xl overflow-hidden" style={{ border: "1px solid #E5E7EB" }}>
+                <summary className="px-5 py-3 cursor-pointer text-sm font-medium select-none"
+                  style={{ background: "#F7F9FC", color: "#0D1117", listStyle: "none" }}>
+                  Preview Agent Config
+                </summary>
+                <div className="bg-white px-5 py-4 space-y-2 text-sm" style={{ color: "#374151" }}>
+                  <div className="flex justify-between">
+                    <span style={{ color: "#6B7280" }}>Agent name</span>
+                    <span className="font-medium">{promptPreview.agentName ?? "ARIA"}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span style={{ color: "#6B7280" }}>Business type</span>
+                    <span className="font-medium">{promptPreview.bizType ?? "GENERAL"}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span style={{ color: "#6B7280" }}>Knowledge items</span>
+                    <span className="font-medium">{promptPreview.kbCount}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span style={{ color: "#6B7280" }}>Languages</span>
+                    <span className="font-medium">{(promptPreview.languages as string[] | null)?.join(", ") ?? "en"}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span style={{ color: "#6B7280" }}>Hours configured</span>
+                    <span className="font-medium">{promptPreview.hoursConfigured ? (promptPreview.todayOpen ? "Open today" : "Closed today") : "Not set"}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span style={{ color: "#6B7280" }}>Human handoff</span>
+                    <span className="font-medium">{promptPreview.humanPhone ? "Configured" : "Not set"}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span style={{ color: "#6B7280" }}>Barge-in</span>
+                    <span className="font-medium">{promptPreview.bargeInEnabled ? "Enabled" : "Disabled"}</span>
+                  </div>
+                  {promptPreview.hipaaMode && (
+                    <div className="flex justify-between">
+                      <span style={{ color: "#6B7280" }}>HIPAA mode</span>
+                      <span className="font-medium" style={{ color: "#EF4444" }}>On</span>
+                    </div>
+                  )}
+                </div>
+              </details>
+            )}
 
             <div className="rounded-2xl p-4"
               style={{ background: "rgba(20,71,230,0.05)", border: "1px solid rgba(20,71,230,0.15)" }}>

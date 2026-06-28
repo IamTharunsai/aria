@@ -1,6 +1,7 @@
 import { Router } from "express"
 import { prisma } from "../lib/prisma"
 import { getIo } from "../lib/socket"
+import { buildSystemPrompt } from "../lib/prompt-builder"
 
 const router = Router()
 
@@ -39,6 +40,23 @@ router.post("/", async (req, res) => {
         },
         update: { status: "IN_PROGRESS", startedAt: new Date() },
       })
+
+      if (locationId) {
+        const loc = await prisma.location.findUnique({
+          where: { id: locationId },
+          include: { org: true, knowledgeItems: { take: 20, orderBy: { createdAt: "desc" } } },
+        })
+        if (loc?.vapiAgentId) {
+          const prompt = buildSystemPrompt(loc)
+          // ponytail: fire-and-forget — prompt update failure shouldn't block the webhook response
+          fetch(`https://api.vapi.ai/assistant/${loc.vapiAgentId}`, {
+            method: "PATCH",
+            headers: { "Authorization": `Bearer ${process.env.VAPI_PRIVATE_KEY}`, "Content-Type": "application/json" },
+            body: JSON.stringify({ model: { messages: [{ role: "system", content: prompt }] } }),
+          }).catch(() => {})
+        }
+      }
+
       getIo().to(orgId).emit("call.started", {
         vapiCallId: call.id,
         fromNumber: call.customer?.number ?? "",

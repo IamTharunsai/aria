@@ -100,4 +100,34 @@ export const agentRouter = router({
         }
       })
     }),
+
+  previewPrompt: protectedProcedure
+    .input(z.string().optional())
+    .query(async ({ ctx, input }) => {
+      if (!ctx.orgId) return null
+      const loc = await ctx.prisma.location.findFirst({
+        where: input ? { id: input, orgId: ctx.orgId } : { orgId: ctx.orgId },
+        include: { org: true, knowledgeItems: { take: 20, orderBy: { createdAt: "desc" } } }
+      })
+      if (!loc) return null
+      const hours = loc.hoursJson as Record<string, { open: boolean; from: string; to: string }> | null
+      const todayHours = hours ? (() => {
+        const today = new Date().toLocaleDateString("en-US", { weekday: "long" }).toLowerCase()
+        return hours[today]
+      })() : null
+      return {
+        agentName: loc.agentName,
+        orgName: loc.org.name,
+        bizType: loc.org.businessType,
+        hipaaMode: loc.org.hipaaMode,
+        greetingMsg: loc.greetingMsg,
+        languages: loc.languages,
+        hoursConfigured: !!loc.hoursJson,
+        todayOpen: todayHours?.open ?? false,
+        humanPhone: !!loc.humanPhone,
+        kbCount: loc.knowledgeItems.length,
+        safetyJson: loc.safetyJson,
+        bargeInEnabled: loc.bargeInEnabled,
+      }
+    }),
 })
