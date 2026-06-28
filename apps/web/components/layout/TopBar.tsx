@@ -47,7 +47,6 @@ export function TopBar({ title, subtitle }: TopBarProps) {
         </button>
 
         <UserButton
-          afterSignOutUrl="/"
           appearance={{
             elements: {
               avatarBox: "w-8 h-8 rounded-xl",

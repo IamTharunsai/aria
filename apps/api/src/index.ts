@@ -7,6 +7,7 @@ import { createServer } from "http"
 import { initSocket } from "./lib/socket"
 import vapiRouter from "./routes/vapi"
 import kbRouter from "./routes/kb"
+import twilioRouter from "./routes/twilio"
 
 const app = express()
 const httpServer = createServer(app)
@@ -24,6 +25,7 @@ app.use(express.json())
 app.get("/health", (_req, res) => res.json({ status: "ok", ts: Date.now() }))
 app.use("/webhooks/vapi", vapiRouter)
 app.use("/api/kb", kbRouter)
+app.use("/webhooks/twilio", twilioRouter)
 
 const PORT = process.env.PORT ?? 4000
 httpServer.listen(PORT, () => console.log(`API running on :${PORT}`))

@@ -18,9 +18,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      signInUrl="/sign-in"
+      signUpUrl="/sign-up"
+    >
       <html lang="en" className={`h-full antialiased ${jakarta.variable}`}>
-        <body className="min-h-full flex flex-col font-[family-name:var(--font-jakarta)]">
+        <body className="min-h-full flex flex-col font-(family-name:--font-jakarta)">
           <Providers>{children}</Providers>
         </body>
       </html>

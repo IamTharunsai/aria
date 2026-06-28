@@ -19,7 +19,7 @@ export const kbRouter = router({
 
   create: protectedProcedure
     .input(z.object({
-      locationId: z.string(),
+      locationId: z.string().optional(),
       type: z.enum(["FAQ", "DOCUMENT", "WEBPAGE", "CUSTOM"]),
       title: z.string().min(1),
       content: z.string().min(1),

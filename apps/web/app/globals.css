@@ -139,3 +139,82 @@
     @apply font-sans;
   }
 }
+
+/* ── ARIA Global Animations ──────────────────────────────── */
+@keyframes aria-float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%       { transform: translateY(-10px) rotate(1deg); }
+  66%       { transform: translateY(-5px) rotate(-1deg); }
+}
+@keyframes aria-pulse-ring {
+  0%   { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+@keyframes aria-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes aria-glow {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 0.8; }
+}
+@keyframes aria-slide-up {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes aria-slide-in-left {
+  from { opacity: 0; transform: translateX(-32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes aria-slide-in-right {
+  from { opacity: 0; transform: translateX(32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes aria-scale-in {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes aria-spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes aria-counter {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes aria-wave {
+  0%   { transform: scaleY(0.4); }
+  50%  { transform: scaleY(1); }
+  100% { transform: scaleY(0.4); }
+}
+@keyframes aria-orbit {
+  from { transform: rotate(0deg) translateX(80px) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(80px) rotate(-360deg); }
+}
+@keyframes aria-bg-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes aria-dot-expand {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50%       { transform: scale(1.6); opacity: 1; }
+}
+@keyframes aria-message-pop {
+  0%   { opacity: 0; transform: scale(0.8) translateY(8px); }
+  60%  { transform: scale(1.04) translateY(-2px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.animate-aria-float        { animation: aria-float 6s ease-in-out infinite; }
+.animate-aria-pulse-ring   { animation: aria-pulse-ring 2s ease-out infinite; }
+.animate-aria-shimmer      { animation: aria-shimmer 3s linear infinite; background-size: 200% auto; }
+.animate-aria-glow         { animation: aria-glow 3s ease-in-out infinite; }
+.animate-aria-slide-up     { animation: aria-slide-up 0.7s ease both; }
+.animate-aria-scale-in     { animation: aria-scale-in 0.5s ease both; }
+.animate-aria-spin-slow    { animation: aria-spin-slow 12s linear infinite; }
+.animate-aria-wave         { animation: aria-wave 1.2s ease-in-out infinite; }
+.animate-aria-orbit        { animation: aria-orbit 8s linear infinite; }
+.animate-aria-bg-shift     { animation: aria-bg-shift 8s ease infinite; }
+.animate-aria-dot-expand   { animation: aria-dot-expand 0.8s ease-in-out infinite; }
+.animate-aria-message-pop  { animation: aria-message-pop 0.4s ease both; }

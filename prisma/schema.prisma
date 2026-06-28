@@ -9,22 +9,26 @@ datasource db {
 }
 
 model Organization {
-  id           String   @id @default(cuid())
+  id           String        @id @default(cuid())
   name         String
-  slug         String   @unique
-  plan         Plan     @default(STARTER)
+  slug         String        @unique
+  plan         Plan          @default(STARTER)
   logoUrl      String?
   customDomain String?
   brandColor   String?
-  isAgency     Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  locations    Location[]
-  members      Member[]
-  contacts     Contact[]
-  conversations Conversation[]
-  campaigns    Campaign[]
-  billing      Billing?
+  isAgency     Boolean       @default(false)
+  businessType BusinessType?
+  hipaaMode    Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  locations      Location[]
+  members        Member[]
+  contacts       Contact[]
+  conversations  Conversation[]
+  campaigns      Campaign[]
+  billing        Billing?
+  knowledgeItems KnowledgeItem[]
+  calls          Call[]
 }
 
 model Location {
@@ -46,6 +50,8 @@ model Location {
   greetingMsg    String?      @db.Text
   afterHoursMsg  String?      @db.Text
   humanPhone     String?
+  safetyJson     Json?
+  bargeInEnabled Boolean      @default(true)
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   calls          Call[]
@@ -85,30 +91,32 @@ model Contact {
 }
 
 model Call {
-  id                String     @id @default(cuid())
-  locationId        String
-  location          Location   @relation(fields: [locationId], references: [id])
+  id                String       @id @default(cuid())
+  orgId             String
+  org               Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  locationId        String?
+  location          Location?    @relation(fields: [locationId], references: [id])
   contactId         String?
-  contact           Contact?   @relation(fields: [contactId], references: [id])
-  vapiCallId        String?    @unique
-  direction         Direction  @default(INBOUND)
-  status            CallStatus @default(IN_PROGRESS)
-  fromNumber        String
-  toNumber          String
-  startedAt         DateTime   @default(now())
+  contact           Contact?     @relation(fields: [contactId], references: [id])
+  vapiCallId        String?      @unique
+  direction         Direction    @default(INBOUND)
+  status            CallStatus   @default(IN_PROGRESS)
+  fromNumber        String       @default("")
+  toNumber          String       @default("")
+  startedAt         DateTime     @default(now())
   endedAt           DateTime?
-  durationSeconds   Int?
+  duration          Int?
   recordingUrl      String?
-  transcript        String?    @db.Text
-  summary           String?    @db.Text
+  transcript        String?      @db.Text
+  summary           String?      @db.Text
   sentiment         Sentiment?
   language          String?
-  humanHandoff      Boolean    @default(false)
-  appointmentBooked Boolean    @default(false)
+  humanHandoff      Boolean      @default(false)
+  appointmentBooked Boolean      @default(false)
   appointmentData   Json?
-  leadCaptured      Boolean    @default(false)
+  leadCaptured      Boolean      @default(false)
   leadData          Json?
-  createdAt         DateTime   @default(now())
+  createdAt         DateTime     @default(now())
 }
 
 model Conversation {
@@ -132,7 +140,10 @@ model Message {
   conversationId String
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   direction      Direction
+  channel        Channel      @default(SMS)
   content        String       @db.Text
+  fromNumber     String       @default("")
+  toNumber       String       @default("")
   mediaUrls      String[]
   isAi           Boolean      @default(false)
   externalId     String?
@@ -140,14 +151,16 @@ model Message {
 }
 
 model KnowledgeItem {
-  id          String    @id @default(cuid())
-  locationId  String
-  location    Location  @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  id          String       @id @default(cuid())
+  orgId       String
+  org         Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  locationId  String?
+  location    Location?    @relation(fields: [locationId], references: [id])
   type        KBType
   title       String
-  content     String    @db.Text
+  content     String       @db.Text
   sourceUrl   String?
-  createdAt   DateTime  @default(now())
+  createdAt   DateTime     @default(now())
 }
 
 model Campaign {
@@ -176,6 +189,24 @@ model Billing {
   minutesLimit     Int      @default(500)
   renewsAt         DateTime?
   createdAt        DateTime @default(now())
+}
+
+enum BusinessType {
+  HEALTHCARE
+  RESTAURANT
+  SALON
+  LEGAL
+  REAL_ESTATE
+  EDUCATION
+  RETAIL
+  HOSPITALITY
+  AUTOMOTIVE
+  HOME_SERVICES
+  FINANCE
+  STARTUP
+  GOVERNMENT
+  RELIGIOUS
+  TRANSPORT
 }
 
 enum Plan {

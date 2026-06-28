@@ -5,6 +5,8 @@ import { analyticsRouter } from "./analytics"
 import { agentRouter } from "./agent"
 import { settingsRouter } from "./settings"
 import { kbRouter } from "./kb"
+import { inboxRouter } from "./inbox"
+import { campaignsRouter } from "./campaigns"
 
 export const appRouter = router({
   calls: callsRouter,
@@ -13,6 +15,8 @@ export const appRouter = router({
   agent: agentRouter,
   settings: settingsRouter,
   kb: kbRouter,
+  inbox: inboxRouter,
+  campaigns: campaignsRouter,
 })
 
 export type AppRouter = typeof appRouter
