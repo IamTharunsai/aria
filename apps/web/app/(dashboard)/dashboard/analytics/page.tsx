@@ -51,7 +51,7 @@ export default function AnalyticsPage() {
           <div className="flex rounded-xl overflow-hidden" style={{ border: "1px solid #E5E7EB" }}>
             {(["day","week","month"] as Period[]).map(p => (
               <button key={p} onClick={() => setPeriod(p)} className="px-4 py-2 text-sm font-medium transition-colors cursor-pointer"
-                style={{ background: period===p ? "#1447E6" : "#fff", color: period===p ? "#fff" : "#6B7280" }}>
+                style={{ background: period===p ? "#6366F1" : "#fff", color: period===p ? "#fff" : "#6B7280" }}>
                 {PERIOD_LABELS[p]}
               </button>
             ))}
@@ -59,14 +59,14 @@ export default function AnalyticsPage() {
         </div>
         {isLoading ? (
           <div className="flex items-center justify-center h-48">
-            <div className="w-8 h-8 rounded-full border-2 animate-spin" style={{ borderColor: "#1447E6", borderTopColor: "transparent" }} />
+            <div className="w-8 h-8 rounded-full border-2 animate-spin" style={{ borderColor: "#6366F1", borderTopColor: "transparent" }} />
           </div>
         ) : !data ? null : (
           <>
             <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
               <StatCard label="Total calls" value={data.total} />
-              <StatCard label="Answered" value={data.answered} accent="#16A34A" sub={`${data.answerRate}% rate`} />
-              <StatCard label="Missed" value={data.missed} accent="#EF4444" />
+              <StatCard label="Answered" value={data.answered} accent="#10B981" sub={`${data.answerRate}% rate`} />
+              <StatCard label="Missed" value={data.missed} accent="#F43F5E" />
               <StatCard label="Avg duration" value={fmt(data.avgDuration)} />
               <StatCard label="In / Out" value={`${data.inbound} / ${data.outbound}`} />
             </div>
@@ -77,20 +77,20 @@ export default function AnalyticsPage() {
                   <AreaChart data={data.byDay} margin={{ top:4, right:4, left:-20, bottom:0 }}>
                     <defs>
                       <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#1447E6" stopOpacity={0.15} />
-                        <stop offset="95%" stopColor="#1447E6" stopOpacity={0} />
+                        <stop offset="5%" stopColor="#6366F1" stopOpacity={0.15} />
+                        <stop offset="95%" stopColor="#6366F1" stopOpacity={0} />
                       </linearGradient>
                       <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#16A34A" stopOpacity={0.12} />
-                        <stop offset="95%" stopColor="#16A34A" stopOpacity={0} />
+                        <stop offset="5%" stopColor="#10B981" stopOpacity={0.12} />
+                        <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#F0F2F5" />
                     <XAxis dataKey="date" tick={{ fontSize:11, fill:"#9CA3AF" }} tickLine={false} axisLine={false} />
                     <YAxis tick={{ fontSize:11, fill:"#9CA3AF" }} tickLine={false} axisLine={false} />
                     <Tooltip content={<ChartTip />} />
-                    <Area type="monotone" dataKey="calls" name="Total" stroke="#1447E6" strokeWidth={2} fill="url(#g1)" dot={false} />
-                    <Area type="monotone" dataKey="answered" name="Answered" stroke="#16A34A" strokeWidth={2} fill="url(#g2)" dot={false} />
+                    <Area type="monotone" dataKey="calls" name="Total" stroke="#6366F1" strokeWidth={2} fill="url(#g1)" dot={false} />
+                    <Area type="monotone" dataKey="answered" name="Answered" stroke="#10B981" strokeWidth={2} fill="url(#g2)" dot={false} />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -121,8 +121,8 @@ export default function AnalyticsPage() {
                   <XAxis dataKey="date" tick={{ fontSize:11, fill:"#9CA3AF" }} tickLine={false} axisLine={false} />
                   <YAxis tick={{ fontSize:11, fill:"#9CA3AF" }} tickLine={false} axisLine={false} />
                   <Tooltip content={<ChartTip />} />
-                  <Bar dataKey="answered" name="Answered" fill="#16A34A" radius={[4,4,0,0]} />
-                  <Bar dataKey="calls" name="Total" fill="#1447E6" radius={[4,4,0,0]} opacity={0.3} />
+                  <Bar dataKey="answered" name="Answered" fill="#10B981" radius={[4,4,0,0]} />
+                  <Bar dataKey="calls" name="Total" fill="#6366F1" radius={[4,4,0,0]} opacity={0.3} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

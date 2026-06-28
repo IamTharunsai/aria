@@ -1,16 +1,11 @@
 {
-  "framework": "nextjs",
   "buildCommand": "cd apps/web && pnpm build",
   "outputDirectory": "apps/web/.next",
   "installCommand": "pnpm install",
-  "devCommand": "cd apps/web && pnpm dev",
   "rewrites": [
     {
       "source": "/api/webhooks/twilio/(.*)",
       "destination": "https://aria-api.railway.app/webhooks/twilio/$1"
     }
-  ],
-  "env": {
-    "NEXT_PUBLIC_API_URL": "https://aria-api.railway.app"
-  }
+  ]
 }
