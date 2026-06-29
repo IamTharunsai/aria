@@ -1,0 +1,10 @@
+{
+  "buildCommand": "cd ../.. && npx prisma generate && cd apps/web && pnpm build",
+  "installCommand": "pnpm install",
+  "rewrites": [
+    {
+      "source": "/api/webhooks/twilio/(.*)",
+      "destination": "https://aria-api.railway.app/webhooks/twilio/$1"
+    }
+  ]
+}
