@@ -31,7 +31,7 @@ export const agentRouter = router({
           id: true, name: true, phoneNumber: true, agentName: true, agentVoiceId: true,
           agentMode: true, greetingMsg: true, afterHoursMsg: true, humanPhone: true,
           languages: true, hoursJson: true, systemPrompt: true, vapiAgentId: true,
-          timezone: true,
+          timezone: true, bargeInEnabled: true,
         }
       })
     }),
@@ -98,6 +98,17 @@ export const agentRouter = router({
           safetyJson: input.safetyJson,
           ...(input.bargeInEnabled !== undefined ? { bargeInEnabled: input.bargeInEnabled } : {})
         }
+      })
+    }),
+
+  setPaused: protectedProcedure
+    .input(z.object({ locationId: z.string(), paused: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.orgId) throw new TRPCError({ code: "UNAUTHORIZED" })
+      return ctx.prisma.location.update({
+        where: { id: input.locationId, orgId: ctx.orgId },
+        data: { agentMode: input.paused ? "OFF" : "AUTOPILOT" },
+        select: { id: true, agentMode: true },
       })
     }),
 

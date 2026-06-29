@@ -1,5 +1,9 @@
+"use client"
+
 import { UserButton } from "@clerk/nextjs"
-import { Bell, Search } from "lucide-react"
+import { Bell, Pause, Play, Loader2 } from "lucide-react"
+import { api } from "@/lib/trpc"
+import { useState } from "react"
 
 interface TopBarProps {
   title: string
@@ -7,6 +11,19 @@ interface TopBarProps {
 }
 
 export function TopBar({ title, subtitle }: TopBarProps) {
+  const { data: config, refetch } = api.agent.getConfig.useQuery(undefined)
+  const setPaused = api.agent.setPaused.useMutation({ onSuccess: () => refetch() })
+  const [toggling, setToggling] = useState(false)
+
+  const isPaused = config?.agentMode === "OFF"
+  const locationId = config?.id ?? "default"
+
+  async function handleToggle() {
+    setToggling(true)
+    await setPaused.mutateAsync({ locationId, paused: !isPaused })
+    setToggling(false)
+  }
+
   return (
     <header
       className="sticky top-0 z-30 flex items-center justify-between px-6"
@@ -31,32 +48,41 @@ export function TopBar({ title, subtitle }: TopBarProps) {
       </div>
 
       {/* Right: actions */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        {/* Search */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+
+        {/* ── ARIA Pause/Resume toggle ── */}
         <button
+          onClick={handleToggle}
+          disabled={toggling || !config}
+          title={isPaused ? "ARIA is paused — click to resume" : "ARIA is live — click to pause"}
           style={{
             display: "flex", alignItems: "center", gap: 8,
-            background: "rgba(255,255,255,0.04)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            borderRadius: 10, padding: "6px 14px",
-            cursor: "pointer", transition: "all .15s",
-            color: "rgba(136,146,164,0.6)", fontSize: 13,
+            borderRadius: 10, padding: "7px 14px",
+            cursor: toggling || !config ? "default" : "pointer",
+            transition: "all .18s",
+            border: "1px solid",
+            fontSize: 13, fontWeight: 600,
+            opacity: toggling ? 0.7 : 1,
+            background: isPaused ? "rgba(239,68,68,0.08)" : "rgba(16,185,129,0.08)",
+            borderColor: isPaused ? "rgba(239,68,68,0.3)" : "rgba(16,185,129,0.3)",
+            color: isPaused ? "#F87171" : "#34D399",
           }}
           onMouseEnter={e => {
-            e.currentTarget.style.background = "rgba(255,255,255,0.07)"
-            e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)"
+            if (!toggling && config) {
+              e.currentTarget.style.background = isPaused ? "rgba(239,68,68,0.15)" : "rgba(16,185,129,0.15)"
+            }
           }}
           onMouseLeave={e => {
-            e.currentTarget.style.background = "rgba(255,255,255,0.04)"
-            e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"
+            e.currentTarget.style.background = isPaused ? "rgba(239,68,68,0.08)" : "rgba(16,185,129,0.08)"
           }}
-          aria-label="Search"
         >
-          <Search size={14} strokeWidth={1.8} />
-          <span style={{ display: "flex", gap: 4, alignItems: "center" }}>
-            <span>Search</span>
-            <kbd style={{ fontSize: 10, fontWeight: 600, color: "rgba(136,146,164,0.4)", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 5, padding: "1px 5px" }}>⌘K</kbd>
-          </span>
+          {toggling
+            ? <Loader2 size={13} style={{ animation: "spin 1s linear infinite" }} />
+            : isPaused
+            ? <Play  size={13} fill="currentColor" />
+            : <Pause size={13} fill="currentColor" />
+          }
+          {toggling ? "Saving…" : isPaused ? "Resume ARIA" : "ARIA Live"}
         </button>
 
         {/* Notifications */}
@@ -80,7 +106,6 @@ export function TopBar({ title, subtitle }: TopBarProps) {
           aria-label="Notifications"
         >
           <Bell size={15} strokeWidth={1.8} />
-          {/* Unread dot */}
           <span style={{ position: "absolute", top: 7, right: 7, width: 6, height: 6, borderRadius: "50%", background: "#00D471", border: "1.5px solid rgba(10,12,22,1)" }} />
         </button>
 
@@ -89,6 +114,8 @@ export function TopBar({ title, subtitle }: TopBarProps) {
           <UserButton appearance={{ elements: { avatarBox: "w-8 h-8 rounded-xl" } }} />
         </div>
       </div>
+
+      <style>{`@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}`}</style>
     </header>
   )
 }

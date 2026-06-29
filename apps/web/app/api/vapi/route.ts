@@ -53,6 +53,23 @@ export async function POST(req: NextRequest) {
     const locationId = String(metadata.locationId ?? "")
 
     if (event.type === "call-started" && orgId) {
+      // If agent is paused (agentMode=OFF), push a "closed" prompt and let the call end
+      if (locationId) {
+        const loc = await prisma.location.findUnique({
+          where: { id: locationId },
+          select: { agentMode: true, agentName: true, vapiAgentId: true },
+        })
+        if (loc?.agentMode === "OFF" && loc.vapiAgentId) {
+          fetch(`https://api.vapi.ai/assistant/${loc.vapiAgentId}`, {
+            method: "PATCH",
+            headers: { Authorization: `Bearer ${process.env.VAPI_PRIVATE_KEY}`, "Content-Type": "application/json" },
+            body: JSON.stringify({
+              model: { messages: [{ role: "system", content: `Say exactly: "Thank you for calling. We are not available right now. Please try again later. Goodbye." Then end the call.` }] },
+            }),
+          }).catch(() => {})
+        }
+      }
+
       await prisma.call.upsert({
         where:  { vapiCallId: String(call.id) },
         create: {
