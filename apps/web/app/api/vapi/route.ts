@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { PrismaClient } from "@prisma/client"
+
+const prisma = new PrismaClient()
 
 const SPAM_PHRASES   = /automated message|press 1|irs|social security|loan offer|extended warranty/i
 const HANDOFF_PHRASES = /transfer to human|speak to someone|speak with a person|talk to a human|speak to an agent|connect me to/i
@@ -103,9 +105,12 @@ export async function POST(req: NextRequest) {
     if (event.type === "end-of-call-report" && orgId) {
       const artifact    = (event.artifact ?? {}) as Record<string, unknown>
       const durationSec = Math.round((Number(event.durationMs) || 0) / 1000)
-      const rawSentiment = String((event.analysis as Record<string, unknown> | undefined)?.structuredData?.sentiment ?? "NEUTRAL").toUpperCase()
-      const sentiment = (["POSITIVE","NEGATIVE","NEUTRAL"].includes(rawSentiment) ? rawSentiment : "NEUTRAL") as "POSITIVE"|"NEGATIVE"|"NEUTRAL"
-      const summary    = String((event.analysis as Record<string, unknown> | undefined)?.summary ?? "")
+      const analysis = event.analysis as Record<string, unknown> | undefined
+      const structured = analysis?.structuredData as Record<string, unknown> | undefined
+      const rawSentiment = String(structured?.sentiment ?? "NEUTRAL").toUpperCase()
+      const sentiment: "POSITIVE" | "NEGATIVE" | "NEUTRAL" =
+        rawSentiment === "POSITIVE" ? "POSITIVE" : rawSentiment === "NEGATIVE" ? "NEGATIVE" : "NEUTRAL"
+      const summary    = String(analysis?.summary ?? "")
       const transcript = String(artifact.transcript ?? "")
 
       const isSpam         = SPAM_PHRASES.test(summary) || SPAM_PHRASES.test(transcript)
