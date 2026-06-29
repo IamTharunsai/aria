@@ -313,7 +313,7 @@ export default function AgentPage() {
                     Add FAQs, webpages, or documents so ARIA can answer customer questions.
                   </p>
                 </div>
-              ) : items.map((item) => (
+              ) : items.map((item: { id: string; type: string; title: string; content: string }) => (
                 <div key={item.id} className="rounded-2xl bg-white overflow-hidden transition-all"
                   style={{ border: "1px solid #E5E7EB" }}>
                   <div className="flex items-center gap-3 px-4 py-3 cursor-pointer"
