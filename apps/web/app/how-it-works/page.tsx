@@ -212,7 +212,7 @@ export default function HowItWorksPage() {
           </div>
           <SignUpButton>
             <button style={{ background: "#6366F1", color: "#fff", border: "none", borderRadius: 9999, padding: "9px 22px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
-              Get early access
+              Sign up free
             </button>
           </SignUpButton>
         </div>

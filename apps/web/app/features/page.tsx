@@ -38,7 +38,7 @@ export default function FeaturesPage() {
           </div>
           <SignUpButton>
             <button style={{ background: "#6366F1", color: "#fff", border: "none", borderRadius: 9999, padding: "9px 22px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
-              Get early access
+              Sign up free
             </button>
           </SignUpButton>
         </div>
@@ -110,18 +110,18 @@ export default function FeaturesPage() {
             <div style={{ height: 1, background: "rgba(99,102,241,0.15)", margin: "24px 0 32px" }} />
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }}>
               <div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: "#22D3EE", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 16 }}>22 Indian Languages</div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                  {["Hindi","Bengali","Telugu","Marathi","Tamil","Urdu","Gujarati","Kannada","Malayalam","Punjabi","Odia","Assamese","Maithili","Sanskrit","Konkani","Nepali","Sinhala","Sindhi","Bhojpuri","Rajasthani","Awadhi","Magahi"].map(lang => (
-                    <div key={lang} style={{ background: "rgba(34,211,238,0.07)", border: "1px solid rgba(34,211,238,0.18)", borderRadius: 100, padding: "4px 12px", fontSize: 13, color: "#94A3B8", fontWeight: 500 }}>{lang}</div>
-                  ))}
-                </div>
-              </div>
-              <div>
                 <div style={{ fontSize: 13, fontWeight: 700, color: "#818CF8", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 16 }}>14 US Languages</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                   {["English","Spanish","Chinese","Tagalog","Vietnamese","Arabic","French","Korean","Russian","Haitian Creole","German","Hindi","Portuguese","Italian"].map(lang => (
                     <div key={lang} style={{ background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.18)", borderRadius: 100, padding: "4px 12px", fontSize: 13, color: "#94A3B8", fontWeight: 500 }}>{lang}</div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "#22D3EE", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 16 }}>22 Indian Languages</div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  {["Hindi","Bengali","Telugu","Marathi","Tamil","Urdu","Gujarati","Kannada","Malayalam","Punjabi","Odia","Assamese","Maithili","Sanskrit","Konkani","Nepali","Sinhala","Sindhi","Bhojpuri","Rajasthani","Awadhi","Magahi"].map(lang => (
+                    <div key={lang} style={{ background: "rgba(34,211,238,0.07)", border: "1px solid rgba(34,211,238,0.18)", borderRadius: 100, padding: "4px 12px", fontSize: 13, color: "#94A3B8", fontWeight: 500 }}>{lang}</div>
                   ))}
                 </div>
               </div>

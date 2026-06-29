@@ -148,7 +148,7 @@ export default function MarketingPage() {
             </SignInButton>
             <SignUpButton>
               <button className="btn-g" style={{ background: G, color: "#000", borderRadius: 9999, padding: "8px 20px", fontSize: 14, fontWeight: 700 }}>
-                Get early access
+                Start free
               </button>
             </SignUpButton>
           </div>
@@ -648,7 +648,7 @@ export default function MarketingPage() {
         <div style={{ position:"relative", zIndex:10, maxWidth:680, margin:"0 auto", textAlign:"center" }}>
           <div className="sr" style={{ display:"inline-flex", alignItems:"center", gap:8, background:gDim, border:`1px solid ${gBrd}`, borderRadius:9999, padding:"6px 18px", fontSize:12, fontWeight:700, color:G, letterSpacing:"0.05em", textTransform:"uppercase", marginBottom:36 }}>
             <div className="ldot" style={{ width:7, height:7, borderRadius:"50%", background:G }} />
-            First 100 businesses get Starter free for 3 months
+            Start free · No credit card required
           </div>
 
           <h2 className="sr d1" style={{ fontSize:"clamp(36px,5.5vw,68px)", fontWeight:900, color:TX, margin:"0 0 20px", letterSpacing:"-0.042em", lineHeight:1.0 }}>
@@ -656,13 +656,13 @@ export default function MarketingPage() {
           </h2>
 
           <p className="sr d2" style={{ fontSize:19, color:MT, margin:"0 0 52px", lineHeight:1.65 }}>
-            Join the early access program. ARIA answers every call from day one — no hardware, no training, no delays.
+            ARIA answers every call from day one — no hardware, no training, no delays.
           </p>
 
           <div className="sr d3" style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:16 }}>
             <SignUpButton>
               <button className="btn-g" style={{ background:G, color:"#000", fontWeight:800, borderRadius:9999, padding:"18px 52px", fontSize:18, border:"none", cursor:"pointer", display:"flex", alignItems:"center", gap:10 }}>
-                Claim your free 3 months <ArrowRight size={18} />
+                Start for free <ArrowRight size={18} />
               </button>
             </SignUpButton>
             <span style={{ fontSize:13, color:"rgba(136,146,164,.4)" }}>No credit card required · Cancel anytime · Setup in 5 minutes</span>

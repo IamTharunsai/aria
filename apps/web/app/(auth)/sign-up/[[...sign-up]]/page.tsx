@@ -23,6 +23,7 @@ export default function SignUpPage() {
       </div>
 
       <SignUp
+        fallbackRedirectUrl="/dashboard/onboarding"
         appearance={{
           elements: {
             headerTitle: { display: "none" },

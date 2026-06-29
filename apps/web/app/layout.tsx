@@ -21,6 +21,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <ClerkProvider
       signInUrl="/sign-in"
       signUpUrl="/sign-up"
+      signInFallbackRedirectUrl="/dashboard"
+      signUpFallbackRedirectUrl="/dashboard/onboarding"
     >
       <html lang="en" className={`h-full antialiased ${jakarta.variable}`}>
         <body className="min-h-full flex flex-col font-(family-name:--font-jakarta)">

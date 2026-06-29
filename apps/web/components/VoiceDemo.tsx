@@ -3,14 +3,31 @@
 import { useState, useEffect, useRef } from "react"
 import { Mic, Volume2, X, Zap } from "lucide-react"
 
-const DEMO_SCRIPT = `Hello! I'm ARIA, your AI voice receptionist. I'm available 24 hours a day, 7 days a week, so you never miss a customer call again. I can book appointments, answer questions about your business, handle multiple callers at once, and even send follow-up text messages. I speak naturally, understand context, and I learn everything about your business from the knowledge base you give me. Setup takes just 5 minutes — no technical knowledge required. I'm currently serving businesses in healthcare, restaurants, legal, and many more industries. With plans starting at just $97 per month, I'm more affordable than a part-time receptionist. Want to get started? Click the button below to try ARIA free today.`
+const DEMO_SCRIPT = `Thank you for calling. This is ARIA, your AI receptionist. I can help you schedule an appointment, answer questions about our services, or connect you with a team member. How can I assist you today?`
+
+function getBestVoice(synth: SpeechSynthesis): SpeechSynthesisVoice | null {
+  const voices = synth.getVoices()
+  const matchers = [
+    (v: SpeechSynthesisVoice) => /Natural|Neural/i.test(v.name) && v.lang.startsWith("en"),
+    (v: SpeechSynthesisVoice) => /Aria|Jenny|Guy/i.test(v.name) && v.lang.startsWith("en"),
+    (v: SpeechSynthesisVoice) => v.name === "Google US English" && v.lang === "en-US",
+    (v: SpeechSynthesisVoice) => v.name.includes("Samantha"),
+    (v: SpeechSynthesisVoice) => !v.localService && v.lang === "en-US",
+    (v: SpeechSynthesisVoice) => v.lang === "en-US",
+    (v: SpeechSynthesisVoice) => v.lang.startsWith("en"),
+  ]
+  for (const match of matchers) {
+    const found = voices.find(match)
+    if (found) return found
+  }
+  return null
+}
 
 export default function VoiceDemo() {
   const [speaking, setSpeaking] = useState(false)
   const [supported, setSupported] = useState(true)
   const [dismissed, setDismissed] = useState(false)
   const synthRef = useRef<SpeechSynthesis | null>(null)
-  const utterRef = useRef<SpeechSynthesisUtterance | null>(null)
 
   useEffect(() => {
     if (typeof window === "undefined" || !window.speechSynthesis) {
@@ -18,28 +35,26 @@ export default function VoiceDemo() {
       return
     }
     synthRef.current = window.speechSynthesis
+    // Chrome loads voices async — prime the list so getBestVoice works on first click
+    if (window.speechSynthesis.getVoices().length === 0) {
+      window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices()
+    }
     return () => { synthRef.current?.cancel() }
   }, [])
 
   function startDemo() {
-    if (!synthRef.current || !supported) return
-    synthRef.current.cancel()
+    const synth = synthRef.current
+    if (!synth || !supported) return
+    synth.cancel()
     const utt = new SpeechSynthesisUtterance(DEMO_SCRIPT)
-    // Prefer a clear English voice
-    const voices = synthRef.current.getVoices()
-    const pick = voices.find(v =>
-      v.name.includes("Samantha") ||
-      v.name.includes("Google US English") ||
-      (v.lang === "en-US" && v.localService)
-    ) ?? voices.find(v => v.lang.startsWith("en"))
-    if (pick) utt.voice = pick
-    utt.rate = 1.05
-    utt.pitch = 1.0
+    const voice = getBestVoice(synth)
+    if (voice) utt.voice = voice
+    utt.rate = 0.95
+    utt.pitch = 1.05
     utt.onstart = () => setSpeaking(true)
     utt.onend = () => setSpeaking(false)
     utt.onerror = () => setSpeaking(false)
-    utterRef.current = utt
-    synthRef.current.speak(utt)
+    synth.speak(utt)
   }
 
   function stopDemo() {
@@ -136,7 +151,7 @@ export default function VoiceDemo() {
         {/* Message when not speaking */}
         {!speaking && (
           <p style={{ fontSize: 13, color: "#64748B", margin: "0 0 14px", lineHeight: 1.5 }}>
-            Hear how ARIA sounds on a real call. Click play for a 30-second demo.
+            Hear how ARIA sounds on a real call. Click play for a live demo.
           </p>
         )}
 
