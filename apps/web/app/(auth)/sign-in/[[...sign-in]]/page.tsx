@@ -24,7 +24,7 @@ export default function SignInPage() {
       </div>
 
       <SignIn
-        fallbackRedirectUrl="/dashboard"
+        forceRedirectUrl="/dashboard"
         appearance={{
           elements: {
             headerTitle: { display: "none" },
